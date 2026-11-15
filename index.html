@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KIDS DESIGN OS</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#20242c;font:14px Arial,"Microsoft YaHei",sans-serif}
+header{background:#202a38;color:white;padding:22px 5%;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:20px;margin:0}header small{color:#b9c5d3}
+main{max-width:1200px;margin:28px auto;padding:0 20px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+nav button,.btn{border:0;border-radius:7px;padding:10px 15px;background:#e5e9ef;cursor:pointer}
+nav button.active,.primary{background:#263d5b;color:white}
+.panel{background:white;border:1px solid #e4e7ec;border-radius:12px;padding:22px;margin-bottom:18px}
+h2{font-size:19px;margin:0 0 16px}h3{font-size:15px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.stat{background:#f6f8fb;padding:18px;border-radius:9px}.stat strong{font-size:25px;display:block;margin-top:8px}
+label{display:block;font-weight:600;margin:12px 0 6px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #d7dce4;border-radius:7px;font:inherit;background:white}
+textarea{min-height:90px;resize:vertical}
+button{font:inherit}.btn{margin-top:12px}.primary{background:#263d5b;color:white}
+.item{padding:14px;border:1px solid #e5e8ed;border-radius:8px;margin:9px 0}
+.muted{color:#77808d;font-size:12px}.hidden{display:none}
+.tag{display:inline-block;background:#edf2f8;padding:4px 8px;border-radius:5px;font-size:12px}
+.result{white-space:pre-wrap;background:#f6f8fb;padding:15px;border-radius:8px;line-height:1.7;margin-top:12px}
+footer{text-align:center;color:#89919c;padding:25px}
+</style>
+</head>
+<body>
+<header>
+ <div><h1>✦ KIDS DESIGN OS</h1><small>AI-powered Kidswear Design & Development</small></div>
+ <span class="tag">研发试点 V0.1</span>
+</header>
+<main>
+<nav>
+ <button class="active" onclick="show('home',this)">研发总览</button>
+ <button onclick="show('project',this)">产品企划</button>
+ <button onclick="show('design',this)">创意设计</button>
+ <button onclick="show('material',this)">面辅料</button>
+ <button onclick="show('sample',this)">样衣评审</button>
+ <button onclick="show('archive',this)">研发档案</button>
+</nav>
+
+<section id="home">
+ <div class="panel">
+  <h2>童装研发工作台</h2>
+  <p class="muted">从创意、款式设计到材料、技术和样衣评审，管理每一款产品的研发过程。</p>
+  <div class="grid">
+   <div class="stat">研发项目<strong id="projectCount">0</strong></div>
+   <div class="stat">款式数量<strong id="styleCount">0</strong></div>
+   <div class="stat">样衣问题<strong id="issueCount">0</strong></div>
+   <div class="stat">已定版款式<strong id="approvedCount">0</strong></div>
+  </div>
+ </div>
+ <div class="panel"><h3>快速创建研发项目</h3>
+  <label>项目名称</label><input id="quickName" placeholder="例如：2027春夏童装系列">
+  <label>产品季节</label><select id="quickSeason"><option>2027春夏</option><option>2027秋冬</option><option>2028春夏</option></select>
+  <button class="btn primary" onclick="quickCreate()">+ 创建项目</button>
+ </div>
+ <div class="panel"><h3>研发项目列表</h3><div id="projectList">暂时没有项目，请先创建。</div></div>
+</section>
+
+<section id="project" class="hidden">
+ <div class="panel"><h2>产品企划 / 款式建档</h2>
+  <label>所属项目</label><input id="pname" placeholder="例如：2027春夏童装系列">
+  <label>款号</label><input id="styleCode" placeholder="例如：KF-001">
+  <label>产品名称</label><input id="styleName" placeholder="例如：儿童基础圆领T恤">
+  <div class="grid">
+   <div><label>品类</label><select id="category"><option>儿童T恤</option><option>儿童卫衣</option><option>儿童裤装</option><option>儿童连衣裙</option><option>其他</option></select></div>
+   <div><label>年龄段</label><select id="age"><option>0-3岁</option><option>3-6岁</option><option>6-9岁</option><option>9-12岁</option><option>12-16岁</option></select></div>
+   <div><label>目标市场</label><select id="market"><option>待确定</option><option>中国大陆</option><option>新加坡及东南亚</option><option>欧美</option><option>全球</option></select></div>
+  </div>
+  <label>设计定位 / 产品需求</label><textarea id="brief" placeholder="描述目标消费者、穿着场景、风格、价格带、功能需求……"></textarea>
+  <button class="btn primary" onclick="addStyle()">保存款式档案</button>
+ </div>
+</section>
+
+<section id="design" class="hidden">
+ <div class="panel"><h2>AI 创意设计助手</h2>
+  <p class="muted">填写设计需求，生成可供设计师继续深化的创意企划文本。当前为规则演示版，不会调用外部 AI。</p>
+  <label>设计主题</label><input id="theme" placeholder="例如：森林探险、海洋假日、城市运动">
+  <label>目标年龄段</label><input id="designAge" placeholder="例如：3-6岁">
+  <label>设计风格</label><select id="styleMood"><option>简约自然</option><option>活泼运动</option><option>复古学院</option><option>甜美可爱</option><option>户外机能</option></select>
+  <label>补充要求</label><textarea id="designNeeds" placeholder="颜色、廓形、图案、面料、功能等"></textarea>
+  <button class="btn primary" onclick="generateConcept()">生成创意企划</button>
+  <div id="conceptResult" class="result hidden"></div>
+ </div>
+ <div class="panel"><h3>设计文件记录</h3>
+  <label>上传设计图 / 灵感图</label><input type="file" id="designFile" accept="image/*,.pdf">
+  <p class="muted">演示版只记录文件名称，不会上传到云端。</p>
+  <button class="btn" onclick="recordFile()">记录文件</button><div id="fileList"></div>
+ </div>
+</section>
+
+<section id="material" class="hidden">
+ <div class="panel"><h2>面辅料开发</h2>
+  <label>关联款号</label><input id="matCode" placeholder="KF-001">
+  <label>材料名称</label><input id="matName" placeholder="例如：精梳棉单面布">
+  <div class="grid">
+   <div><label>材料类型</label><select id="matType"><option>面料</option><option>里料</option><option>辅料</option><option>装饰材料</option></select></div>
+   <div><label>成分</label><input id="composition" placeholder="例如：100%棉"></div>
+   <div><label>克重 / 规格</label><input id="weight" placeholder="例如：180 GSM"></div>
+  </div>
+  <label>供应商 / 备注</label><textarea id="supplier" placeholder="供应商、色号、报价、测试要求……"></textarea>
+  <button class="btn primary" onclick="addMaterial()">保存材料</button>
+  <div id="materialList"></div>
+ </div>
+</section>
+
+<section id="sample" class="hidden">
+ <div class="panel"><h2>样衣评审与修改追踪</h2>
+  <label>关联款号</label><input id="sampleCode" placeholder="KF-001">
+  <label>样衣轮次</label><select id="round"><option>初版样衣</option><option>第二版样衣</option><option>产前样</option></select>
+  <label>评审问题 / 修改意见</label><textarea id="feedback" placeholder="例如：肩宽偏大2cm；领口需要调整；面料洗后缩水待测试……"></textarea>
+  <label>处理状态</label><select id="issueStatus"><option>待修改</option><option>修改中</option><option>待复核</option><option>已关闭</option></select>
+  <button class="btn primary" onclick="addFeedback()">保存评审记录</button>
+  <div id="feedbackList"></div>
+ </div>
+ <div class="panel"><h3>童装安全检查提醒</h3>
+  <p>绳带、纽扣及小部件、面料化学安全、燃烧性能、标签和目标市场法规，需要根据实际销售市场进行专业核查和必要的实验室测试。</p>
+  <span class="tag">AI建议不能代替检测报告</span>
+ </div>
+</section>
+
+<section id="archive" class="hidden">
+ <div class="panel"><h2>研发档案与定版</h2>
+  <label>输入款号</label><input id="approveCode" placeholder="KF-001">
+  <button class="btn primary" onclick="approveStyle()">确认人工定版</button>
+  <div id="archiveList"></div>
+ </div>
+</section>
+</main>
+<footer>KIDS DESIGN OS · Prototype 0.1 · 数据保存在当前浏览器</footer>
+<script>
+const load=k=>JSON.parse(localStorage.getItem(k)||"[]");
+const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let projects=load("k_projects"),styles=load("k_styles"),materials=load("k_materials"),feedbacks=load("k_feedback"),files=load("k_files");
+function show(id,btn){document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));btn.classList.add("active");render()}
+function quickCreate(){let n=document.getElementById("quickName").value.trim();if(!n)return alert("请填写项目名称");projects.push({name:n,season:document.getElementById("quickSeason").value,date:new Date().toLocaleDateString()});save("k_projects",projects);document.getElementById("quickName").value="";render()}
+function addStyle(){let code=document.getElementById("styleCode").value.trim();if(!code)return alert("请填写款号");if(styles.some(x=>x.code===code))return alert("款号已存在");styles.push({project:val("pname"),code,name:val("styleName"),category:val("category"),age:val("age"),market:val("market"),brief:val("brief"),status:"研发中"});save("k_styles",styles);alert("款式档案已保存");render()}
+function val(id){return document.getElementById(id).value}
+function addMaterial(){if(!val("matCode")||!val("matName"))return alert("请填写款号和材料名称");materials.push({code:val("matCode"),name:val("matName"),type:val("matType"),composition:val("composition"),weight:val("weight"),supplier:val("supplier")});save("k_materials",materials);render()}
+function addFeedback(){if(!val("sampleCode")||!val("feedback"))return alert("请填写款号和评审意见");feedbacks.push({code:val("sampleCode"),round:val("round"),feedback:val("feedback"),status:val("issueStatus")});save("k_feedback",feedbacks);render()}
+function generateConcept(){let t=val("theme"),a=val("designAge"),m=val("styleMood"),n=val("designNeeds");if(!t)return alert("请填写设计主题");let s=`主题：${t}\n目标年龄：${a}\n风格方向：${m}\n\n创意建议：\n1. 围绕“${t}”建立统一系列视觉语言。\n2. 优先考虑适合${a}儿童活动需求的舒适廓形。\n3. 建议建立主色、辅助色和点缀色三级配色体系。\n4. 图案和装饰应考虑耐洗性、牢固度及儿童使用安全。\n5. 设计深化前确认面料性能、工艺可行性和目标市场要求。\n\n补充需求：${n}\n\n下一步：设计师确认创意方向，再制作款式图、尺寸规格和工艺资料。`;let e=document.getElementById("conceptResult");e.textContent=s;e.classList.remove("hidden")}
+function recordFile(){let f=document.getElementById("designFile").files[0];if(!f)return alert("请选择文件");files.push(f.name);save("k_files",files);render()}
+function approveStyle(){let c=val("approveCode"),s=styles.find(x=>x.code===c);if(!s)return alert("未找到款号");s.status="已人工定版";save("k_styles",styles);render();alert("已记录人工定版。请确认技术资料、样衣和安全测试均已完成。")}
+function render(){document.getElementById("projectCount").textContent=projects.length;document.getElementById("styleCount").textContent=styles.length;document.getElementById("issueCount").textContent=feedbacks.filter(x=>x.status!=="已关闭").length;document.getElementById("approvedCount").textContent=styles.filter(x=>x.status==="已人工定版").length;
+document.getElementById("projectList").innerHTML=projects.map(x=>`<div class="item"><b>${esc(x.name)}</b> <span class="tag">${esc(x.season)}</span><div class="muted">${esc(x.date)}</div></div>`).join("")||"暂时没有项目，请先创建。";
+document.getElementById("materialList").innerHTML=materials.map(x=>`<div class="item"><b>${esc(x.code)} · ${esc(x.name)}</b><div>${esc(x.type)} | ${esc(x.composition)} | ${esc(x.weight)}</div><div class="muted">${esc(x.supplier)}</div></div>`).join("");
+document.getElementById("feedbackList").innerHTML=feedbacks.map(x=>`<div class="item"><b>${esc(x.code)} · ${esc(x.round)}</b><div>${esc(x.feedback)}</div><span class="tag">${esc(x.status)}</span></div>`).join("");
+document.getElementById("fileList").innerHTML=files.map(x=>`<div class="item">${esc(x)}</div>`).join("");
+document.getElementById("archiveList").innerHTML=styles.map(x=>`<div class="item"><b>${esc(x.code)} · ${esc(x.name)}</b><span class="tag">${esc(x.status)}</span><div class="muted">${esc(x.category)} | ${esc(x.age)} | ${esc(x.market)}</div><p>${esc(x.brief)}</p></div>`).join("")||"尚无款式档案。"}
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+render();
+</script>
+</body>
+</html>
